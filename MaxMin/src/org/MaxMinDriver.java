@@ -1,0 +1,51 @@
+package org;
+
+import java.io.IOException;
+
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class MaxMinDriver {
+
+	/**
+	 * @param args
+	 * @throws IOException
+	 */
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		Configuration conf = new Configuration();
+		Job job= Job.getInstance(conf);
+		
+		
+		job.setJarByClass(MaxMinDriver.class);
+		job.setMapperClass(MaxMinMapper.class); 
+		
+		job.setInputFormatClass(KeyValueTextInputFormat.class);
+		
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(Text.class);
+		
+		job.setNumReduceTasks(0);
+		
+		FileInputFormat.addInputPath(job, new Path("stocksout1")); 
+		FileOutputFormat.setOutputPath(job,new Path("maxminout"));
+		
+		try {
+			job.waitForCompletion(true); //start processing
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+	}
+
+}
